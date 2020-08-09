@@ -150,12 +150,15 @@ public class create_new_storage extends AppCompatActivity implements View.OnClic
                       Log.d("ARRAY", itemv.getQuantity());
                     }
 
-                    //WriteData();
-                    Intent intent = new Intent (create_new_storage.this, ActivityItems.class);
+                    WriteData();
+                    Toast.makeText(this, "New Bin Created", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent (create_new_storage.this, generate_qr.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("list", itemsArrayList);
                     intent.putExtras(bundle);
+                    intent.putExtra("storageName", newStorageName );
                     startActivity(intent);
+                    finish();
 
                 }
 
@@ -164,38 +167,31 @@ public class create_new_storage extends AppCompatActivity implements View.OnClic
         }
     }
 
-    /*
-
-    private Items createData(String name){
-        return new Items(name);
-    }
-
-    private Items createData(int quantityint){
-        return new Items(quantityint);
-    }
 
     private void WriteData() {
-        Items itemv; //When gotten this is both the name and quantity
-        Items itemw; //Just name
-        Items itemx; //Just quantity
 
+        Items itemv; //When gotten this is both the name and quantity
+        //TODO: Check if everything was successful before going to the next activity.
         for (int i = 0; i < itemsArrayList.size(); i++){
             itemv = itemsArrayList.get(i);
-            itemw = createData(itemv.getName());
-            myRef.setValue(itemw);
-            String path = mAuth.getUid() + "/" + newStorageName + "/" + itemv.getName();
-            myRef = database.getReference(path);
-            int quanNum = Integer.parseInt(itemv.getQuantity());
-            itemx = createData(quanNum);
-            myRef.setValue(itemx);
-            getDatabase();
+            final String itemn = itemv.getName();
+            final String itemq = itemv.getQuantity();
+            myRef.push().setValue(itemv).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("Database", "Item: " + itemn  + "Quantity: " + itemq + " Pushed To Database!");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Something Went Wrong! Please Try Again.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
 
-
      }
 
-     */
 
     private boolean validateAndSubmit() {
         itemsArrayList.clear();
@@ -222,6 +218,23 @@ public class create_new_storage extends AppCompatActivity implements View.OnClic
                 result = false;
                 break;
             }
+
+
+        //TODO: Check for duplicate items. Notify if they still want to continue. The below works but needs some tweaking
+        /*
+            String currentString = itemNameText.getText().toString();
+            for (int j = i + 1; j < layoutList.getChildCount(); j++){
+                View itemView2 = layoutList.getChildAt(j);
+                EditText itemNameText2 = itemView2.findViewById(R.id.getItemName);
+                if (itemNameText2.getText().toString().equals(currentString)){
+                    Toast.makeText(this, "Duplicate", Toast.LENGTH_SHORT).show();
+                    result = false;
+                    break;
+                }
+            }
+
+         */
+
 
             itemsArrayList.add(items);
 

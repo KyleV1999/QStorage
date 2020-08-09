@@ -6,17 +6,8 @@ public class Items implements Serializable {
 
     public String name;
     public String quantity;
-    public int quantityint;
 
     public Items() {
-    }
-
-    public Items(String name) {
-        this.name = name;
-    }
-
-    public Items(int quantityint) {
-        this.quantityint = quantityint;
     }
 
     public Items(String name, String quantity) {
@@ -38,13 +29,6 @@ public class Items implements Serializable {
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
-    }
+    }}
 
-    public int getQuantityint() {
-        return quantityint;
-    }
 
-    public void setQuantityint(int quantityint) {
-        this.quantityint = quantityint;
-    }
-}
